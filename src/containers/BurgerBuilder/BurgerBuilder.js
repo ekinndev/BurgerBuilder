@@ -25,7 +25,7 @@ class BurgerBuilder extends Component {
   async componentDidMount() {
     try {
       const response = await axios.get(
-        'https://react-burger-a3099.firebaseio.com/ingredients.json'
+        'ingredients.json'
       );
       this.setState({
         ingredients: response.data,
@@ -53,25 +53,20 @@ class BurgerBuilder extends Component {
     this.setState({ purchasing: false });
   };
   purchaseCountinueHandler = async () => {
-    try {
-      this.setState({ loading: true });
-      const order = {
-        ingredients: this.state.ingredients,
-        price: this.state.totalPrice,
-        customer: {
-          name: 'Ekin',
-          address: {
-            street: 'Sumer',
-            zipcode: '44444',
-            country: 'TR',
-          },
-        },
-      };
-      await axios.post('/orders.json', order);
-      this.setState({ loading: false, purchasing: false });
-    } catch (e) {
-      this.setState({ loading: false, purchasing: false });
+    const queryParams = [];
+    for (let i in this.state.ingredients) {
+      queryParams.push(
+        encodeURIComponent(i) +
+          '=' +
+          encodeURIComponent(this.state.ingredients[i])
+      );
     }
+    queryParams.push('price=' + this.state.totalPrice);
+    const queryString = queryParams.join('&');
+    this.props.history.push({
+      pathname: '/checkout',
+      search: '?' + queryString,
+    });
   };
   addIngredientHandler = (type) => {
     const oldCount = this.state.ingredients[type];
