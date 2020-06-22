@@ -5,19 +5,17 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import * as actionTypes from '../../store/actions';
+import * as burgerBuilderActions from '../../store/actions/index';
+import axios from '../../axios-orders';
 
 class BurgerBuilder extends Component {
   state = {
     purchasing: false,
-    loading: false,
-    error: false,
   };
-  async componentWillUpdate() {
-    console.log(this.props.ings);
+  componentDidMount() {
+    this.props.onInıtIngredients();
   }
   updatePurchaseState(ingredients) {
     const sum = Object.keys(ingredients)
@@ -35,7 +33,8 @@ class BurgerBuilder extends Component {
   purchaseCancelHandler = () => {
     this.setState({ purchasing: false });
   };
-  purchaseCountinueHandler =  () => {
+  purchaseCountinueHandler = () => {
+    this.props.onInitPurchase();
     this.props.history.push('/checkout');
   };
 
@@ -46,7 +45,7 @@ class BurgerBuilder extends Component {
     }
     let orderSummary = null;
 
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p>Ingredients can't be loaded</p>
     ) : (
       <Spinner />
@@ -74,9 +73,6 @@ class BurgerBuilder extends Component {
         </Aux>
       );
     }
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
 
     return (
       <Aux>
@@ -93,19 +89,19 @@ class BurgerBuilder extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    ings: state.ingredients,
-    totalPrice: state.totalPrice,
+    ings: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     onIngredientAdded: (ingName) =>
-      dispatch({ type: actionTypes.ADD_INGREDIENT, ingredientName: ingName }),
+      dispatch(burgerBuilderActions.addIngredient(ingName)),
     onIngredientRemoved: (ingName) =>
-      dispatch({
-        type: actionTypes.REMOVE_INGREDIENT,
-        ingredientName: ingName,
-      }),
+      dispatch(burgerBuilderActions.removeIngredient(ingName)),
+    onInıtIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
+    onInitPurchase: () => dispatch(burgerBuilderActions.purchaseInit()),
   };
 };
 export default connect(
