@@ -1,41 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from './ContactData/ContactData';
 import { connect } from 'react-redux';
-class Checkout extends Component {
-  
-  checkoutCancelledHandler = () => {
-    this.props.history.goBack();
+const checkout = (props) => {
+  const checkoutCancelledHandler = () => {
+    props.history.goBack();
   };
-  checkoutContinuedHandler = () => {
-    this.props.history.replace('/checkout/contact-data');
+  const checkoutContinuedHandler = () => {
+    props.history.replace('/checkout/contact-data');
   };
 
-  render() {
-    let summary = <Redirect to="/" />;
-    if (this.props.ings) {
-      const purchasedRedirect = this.props.purchased ? (
-        <Redirect to="/" />
-      ) : null;
-      summary = (
-        <React.Fragment>
-          {purchasedRedirect}
-          <CheckoutSummary
-            ingredients={this.props.ings}
-            onCheckoutCancelled={this.checkoutCancelledHandler}
-            onCheckoutContinued={this.checkoutContinuedHandler}
-          />
-          <Route
-            path={this.props.match.path + '/contact-data'}
-            component={ContactData}
-          />
-        </React.Fragment>
-      );
-    }
-    return <div>{summary}</div>;
+  let summary = <Redirect to='/' />;
+  if (props.ings) {
+    const purchasedRedirect = props.purchased ? <Redirect to='/' /> : null;
+    summary = (
+      <React.Fragment>
+        {purchasedRedirect}
+        <CheckoutSummary
+          ingredients={props.ings}
+          onCheckoutCancelled={checkoutCancelledHandler}
+          onCheckoutContinued={checkoutContinuedHandler}
+        />
+        <Route
+          path={props.match.path + '/contact-data'}
+          component={ContactData}
+        />
+      </React.Fragment>
+    );
   }
-}
+  return <div>{summary}</div>;
+};
+
 const mapStateToProps = (state) => {
   return {
     ings: state.burgerBuilder.ingredients,
@@ -43,4 +39,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, )(Checkout);
+export default connect(mapStateToProps)(checkout);

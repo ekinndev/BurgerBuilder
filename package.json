@@ -1,6 +1,7 @@
 {
   "name": "burger-builder-starting-setup",
   "version": "0.1.0",
+  "homepage":"https://ekinabalioglu.com/portfolyo/burgerbuilder/",
   "private": true,
   "dependencies": {
     "autoprefixer": "7.1.6",
