@@ -8,7 +8,7 @@ Would you like to eat a hamburger which is prepared for you by React ?
 ## Installing and Running the App
 
  - git clone https://github.com/ekinndev/BurgerBuilder.git
- - cd Burger Builder
+ - cd BurgerBuilder
  - npm install
  - npm start 
  - Open http://localhost:3000 in your browser
