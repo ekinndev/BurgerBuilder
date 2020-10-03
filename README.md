@@ -12,3 +12,5 @@ Would you like to eat a hamburger which is prepared for you by React ?
  - npm install
  - npm start 
  - Open http://localhost:3000 in your browser
+
+LICENSE:MIT
